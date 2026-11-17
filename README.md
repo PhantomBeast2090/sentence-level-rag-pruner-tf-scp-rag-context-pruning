@@ -1,7 +1,6 @@
 # Training-Free Sentence-Level Context Pruning for Retrieval-Augmented Generation (TF-SCP)
 
 [![Python 3.12](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)](https://www.python.org/downloads/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.3%2B-EE4C2C?logo=pytorch&logoColor=white)](https://pytorch.org/)
 [![Dataset: SQuAD v2](https://img.shields.io/badge/Dataset-SQuAD%20v2-blue)](https://huggingface.co/datasets/rajpurkar/squad_v2)
 
@@ -131,9 +130,3 @@ If you find this codebase or methodology useful in your research, please cite ou
   note      = {Implementation and experimental artifacts available at \url{https://github.com/PhantomBeast2090/sentence-level-rag-pruner-tf-scp-rag-context-pruning}}
 }
 ```
-
----
-
-## License
-
-This project is released under the [MIT License](https://opensource.org/licenses/MIT).

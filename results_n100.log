@@ -1,0 +1,56 @@
+W1117 18:42:35.723000 84668 .venv/lib/python3.12/site-packages/torch/distributed/elastic/multiprocessing/redirects.py:35] NOTE: Redirects are currently not supported in MacOs.
+[env] python=3.12.12 torch=2.15.0 transformers=5.23.0 spacy=3.8.18 platform=macOS-26.5.1-arm64-arm-64bit processor=arm
+[env] reader=Qwen/Qwen2.5-0.5B-Instruct on cpu | pruner encoder=sentence-transformers/all-MiniLM-L6-v2 on cpu
+[data] squad_v2/validation: 100 answerable queries, corpus=1204 paragraphs, docs/query=3 (0.3s)
+[pruner] segmenter=en_core_web_sm (dependency parser)
+[run]    1/100  elapsed=   5.2s  running EM full=0.0 hybrid=100.0
+[run]   10/100  elapsed=  47.4s  running EM full=40.0 hybrid=40.0
+[run]   20/100  elapsed=  99.7s  running EM full=35.0 hybrid=25.0
+[run]   30/100  elapsed= 167.6s  running EM full=36.7 hybrid=26.7
+[run]   40/100  elapsed= 224.2s  running EM full=32.5 hybrid=30.0
+[run]   50/100  elapsed= 276.7s  running EM full=32.0 hybrid=30.0
+[run]   60/100  elapsed= 321.8s  running EM full=31.7 hybrid=26.7
+[run]   70/100  elapsed= 371.5s  running EM full=32.9 hybrid=31.4
+[run]   80/100  elapsed= 440.0s  running EM full=32.5 hybrid=31.2
+[run]   90/100  elapsed= 485.9s  running EM full=34.4 hybrid=33.3
+[run]  100/100  elapsed= 532.2s  running EM full=34.0 hybrid=35.0
+
+====================================================================================================
+TABLE I: Token Reduction and Pruning Latency (mean over samples)
+====================================================================================================
+| Method | Ctx tokens | Token red. (%) | Sent. kept (%) | Prune ms (mean / p50 / p95) | Gen ms | E2E ms |
+|---|---|---|---|---|---|---|
+| Standard RAG (full context) | 543.3 | 0.00 ± 0.00 | 100.0 | 0.00 / 0.00 / 0.00 | 774.3 | 774.3 |
+| BM25-only pruning (α=1.0, β=0.0) | 189.8 | 64.71 ± 13.42 | 32.1 | 12.55 / 10.88 / 22.37 | 595.0 | 607.5 |
+| TF-SCP hybrid (α=0.5, β=0.0) | 234.1 | 56.74 ± 11.70 | 41.0 | 61.09 / 52.95 / 106.47 | 684.1 | 745.2 |
+
+====================================================================================================
+TABLE II: QA Performance (95% bootstrap CI in brackets; tests are paired vs. Standard RAG)
+====================================================================================================
+| Method | EM | F1 | ROUGE-L | Answer retained (%) | ΔF1 (p) | ΔEM (McNemar p) |
+|---|---|---|---|---|---|---|
+| Standard RAG (full context) | 34.00 [25.0, 44.0] | 50.38 [41.9, 58.6] | 50.15 [41.7, 58.4] | 100.0 | — | — |
+| BM25-only pruning (α=1.0, β=0.0) | 36.00 [27.0, 46.0] | 53.49 [44.8, 62.1] | 53.28 [44.6, 61.9] | 94.0 | +3.12 (0.436) | +2.00 (0.804) |
+| TF-SCP hybrid (α=0.5, β=0.0) | 35.00 [26.0, 45.0] | 51.78 [43.5, 60.3] | 51.78 [43.5, 60.3] | 98.0 | +1.40 (0.712) | +1.00 (1.000) |
+
+====================================================================================================
+TABLE III: Ablation over fusion weight α (β = 0.0)
+====================================================================================================
+| α | β | Token red. (%) | Prune ms | Answer retained (%) | EM | F1 | ROUGE-L | F1 retention (%) |
+|---|---|---|---|---|---|---|---|---|
+| 0.00 | +0.00 | 49.28 | 58.01 | 99.0 | 35.00 | 52.74 | 52.56 | 104.7 |
+| 0.25 | +0.00 | 52.42 | 52.41 | 100.0 | 37.00 | 51.69 | 51.39 | 102.6 |
+| 0.50 | +0.00 | 56.74 | 61.09 | 98.0 | 35.00 | 51.78 | 51.78 | 102.8 |
+| 0.75 | +0.00 | 61.78 | 50.91 | 97.0 | 35.00 | 54.14 | 54.02 | 107.5 |
+| 1.00 | +0.00 | 64.71 | 12.55 | 94.0 | 36.00 | 53.49 | 53.28 | 106.2 |
+
+====================================================================================================
+TABLE IV: Sensitivity to threshold β (α = 0.5)
+====================================================================================================
+| α | β | Token red. (%) | Prune ms | Answer retained (%) | EM | F1 | ROUGE-L | F1 retention (%) |
+|---|---|---|---|---|---|---|---|---|
+| 0.50 | -0.50 | 29.69 | 59.75 | 100.0 | 38.00 | 52.24 | 52.18 | 103.7 |
+| 0.50 | +0.00 | 56.74 | 61.09 | 98.0 | 35.00 | 51.78 | 51.78 | 102.8 |
+| 0.50 | +0.50 | 75.46 | 50.44 | 93.0 | 41.00 | 60.12 | 59.92 | 119.3 |
+
+[done] total 532.3s | wrote results_n100/summary.json and results_n100/per_sample.jsonl

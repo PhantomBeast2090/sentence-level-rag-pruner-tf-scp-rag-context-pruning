@@ -1,0 +1,27 @@
+== Significance vs full (all configs) ==
+a1.0_b0.0    dF1= +3.12 p=0.436 | EM wins/losses vs full=9/7 McNemar p=0.804
+a0.5_b0.0    dF1= +1.40 p=0.712 | EM wins/losses vs full=8/7 McNemar p=1.000
+a0.0_b0.0    dF1= +2.36 p=0.483 | EM wins/losses vs full=6/5 McNemar p=1.000
+a0.25_b0.0   dF1= +1.32 p=0.708 | EM wins/losses vs full=7/4 McNemar p=0.549
+a0.75_b0.0   dF1= +3.76 p=0.307 | EM wins/losses vs full=8/7 McNemar p=1.000
+a0.5_b-0.5   dF1= +1.86 p=0.530 | EM wins/losses vs full=7/3 McNemar p=0.344
+a0.5_b0.5    dF1= +9.74 p=0.036 | EM wins/losses vs full=17/10 McNemar p=0.248
+
+== Hybrid vs BM25-only (paired) ==
+dF1(hybrid-bm25)=-1.72 p=0.615
+
+== Answer-loss analysis ==
+a1.0_b0.0    lost= 6 F1|lost=  0.0 (full on same= 28.9) | kept=94 F1|kept= 56.9 (full on same= 51.7)
+a0.5_b0.0    lost= 2 F1|lost=  0.0 (full on same= 36.8) | kept=98 F1|kept= 52.8 (full on same= 50.7)
+a0.0_b0.0    lost= 1 F1|lost=  0.0 (full on same= 40.0) | kept=99 F1|kept= 53.3 (full on same= 50.5)
+a0.5_b0.5    lost= 7 F1|lost= 14.3 (full on same= 24.8) | kept=93 F1|kept= 63.6 (full on same= 52.3)
+BM25-lost ∩ hybrid-lost = 2; BM25-only lost & hybrid rescued = 4; hybrid-only lost = 0
+
+== Context stats ==
+sentences/query mean=16.9 sd=5.1; full tokens mean=543.3
+
+== Per-stage latency breakdown (ms, CPU, mean over 100 queries x 3 reps) ==
+spaCy segmentation       mean=  11.10  p50=  10.29
+BM25 scoring             mean=   0.17  p50=   0.17
+MiniLM encoding+cosine   mean=  37.14  p50=  34.79
+fusion+threshold         mean=   0.02  p50=   0.02
